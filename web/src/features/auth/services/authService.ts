@@ -4,7 +4,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth'
 import type { AuthError } from 'firebase/auth'
-import { auth } from '../../../firebase'
+import { auth } from '@/firebase'
 
 const AUTH_ERRORS: Record<string, string> = {
   'auth/user-not-found': 'Usuário não encontrado',

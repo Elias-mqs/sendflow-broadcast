@@ -5,6 +5,7 @@ import { auth } from './firebase'
 import { useAuthStore } from './store/authStore'
 import { LoginPage } from './features/auth/pages/LoginPage'
 import { PrivateRoute } from './components/PrivateRoute'
+import { Layout } from './components/Layout'
 
 function App() {
   const setUser = useAuthStore((s) => s.setUser)
@@ -20,7 +21,12 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route element={<PrivateRoute />}>
-          {/* rotas privadas serão adicionadas na fase 4 */}
+          <Route element={<Layout />}>
+            {/* páginas serão adicionadas nas fases 5, 6 e 7 */}
+            <Route path="/connections" element={<div>Conexões</div>} />
+            <Route path="/contacts" element={<div>Contatos</div>} />
+            <Route path="/messages" element={<div>Mensagens</div>} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to="/connections" replace />} />
       </Routes>

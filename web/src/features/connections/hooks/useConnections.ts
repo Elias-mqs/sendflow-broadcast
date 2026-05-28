@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import {
   collection, query, where, orderBy, onSnapshot,
 } from 'firebase/firestore'
-import { db } from '../../../firebase'
-import type { Connection } from '../../../types'
-import { useAuthStore } from '../../../store/authStore'
+import { db } from '@/firebase'
+import type { Connection } from '@/types'
+import { useAuthStore } from '@/store/authStore'
 
 export const useConnections = () => {
   const [connections, setConnections] = useState<Connection[]>([])

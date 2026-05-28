@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Box, Typography, Button } from '@mui/material'
 import { Add as AddIcon } from '@mui/icons-material'
-import type { Connection } from '../../../types'
+import type { Connection } from '@/types'
 import { useConnections } from '../hooks/useConnections'
 import { ConnectionList } from '../components/ConnectionList'
 import { ConnectionForm } from '../components/ConnectionForm'

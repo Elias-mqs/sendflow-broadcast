@@ -6,9 +6,9 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Button, CircularProgress, Box,
 } from '@mui/material'
-import type { Connection } from '../../../types'
+import type { Connection } from '@/types'
 import { addConnection, updateConnection } from '../services/connectionService'
-import { useAuthStore } from '../../../store/authStore'
+import { useAuthStore } from '@/store/authStore'
 
 interface Props {
   open: boolean

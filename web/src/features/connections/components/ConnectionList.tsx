@@ -3,9 +3,9 @@ import {
   Typography, CircularProgress,
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import type { Connection } from '../../../types'
+import type { Connection } from '@/types'
 import { deleteConnection } from '../services/connectionService'
-import { useConnectionStore } from '../../../store/connectionStore'
+import { useConnectionStore } from '@/store/connectionStore'
 
 interface Props {
   connections: Connection[]

@@ -11,10 +11,10 @@ import {
   Message as MessageIcon,
   Logout as LogoutIcon,
 } from '@mui/icons-material'
-import { useAuthStore } from '../store/authStore'
-import { useConnectionStore } from '../store/connectionStore'
-import { signOut } from '../features/auth/services/authService'
-import { useConnections } from '../features/connections/hooks/useConnections'
+import { useAuthStore } from '@/store/authStore'
+import { useConnectionStore } from '@/store/connectionStore'
+import { signOut } from '@/features/auth/services/authService'
+import { useConnections } from '@/features/connections/hooks/useConnections'
 
 export const Sidebar = () => {
   const navigate = useNavigate()

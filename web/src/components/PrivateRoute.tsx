@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { Box, CircularProgress } from '@mui/material'
-import { useAuthStore } from '../store/authStore'
+import { useAuthStore } from '@/store/authStore'
 
 export const PrivateRoute = () => {
   const { user, loading } = useAuthStore()

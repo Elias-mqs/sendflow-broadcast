@@ -9,7 +9,7 @@ import { ContactForm } from '../components/ContactForm'
 
 export const ContactsPage = () => {
   const { activeConnectionId } = useConnectionStore()
-  const { contacts, loading } = useContacts(activeConnectionId)
+  const { contacts, loading, error } = useContacts(activeConnectionId)
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Contact | undefined>()
 
@@ -46,6 +46,7 @@ export const ContactsPage = () => {
         </Button>
       </Box>
 
+      {error && <Alert severity="error" className="mb-4">{error}</Alert>}
       <ContactList contacts={contacts} loading={loading} onEdit={handleEdit} />
 
       {activeConnectionId && (

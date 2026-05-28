@@ -18,7 +18,7 @@ export const MessagesPage = () => {
   const [editing, setEditing] = useState<Message | undefined>()
 
   const statusFilter = filter === 'all' ? undefined : filter
-  const { messages, loading } = useMessages(activeConnectionId, statusFilter)
+  const { messages, loading, error } = useMessages(activeConnectionId, statusFilter)
 
   const handleEdit = (message: Message) => {
     setEditing(message)
@@ -63,6 +63,7 @@ export const MessagesPage = () => {
         <Tab label="Agendadas" value="scheduled" />
       </Tabs>
 
+      {error && <Alert severity="error" className="mb-4">{error}</Alert>}
       <MessageList messages={messages} loading={loading} onEdit={handleEdit} />
 
       {activeConnectionId && (

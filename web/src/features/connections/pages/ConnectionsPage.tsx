@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Typography, Button } from '@mui/material'
+import { Box, Typography, Button, Alert } from '@mui/material'
 import { Add as AddIcon } from '@mui/icons-material'
 import type { Connection } from '@/types'
 import { useConnections } from '../hooks/useConnections'
@@ -7,7 +7,7 @@ import { ConnectionList } from '../components/ConnectionList'
 import { ConnectionForm } from '../components/ConnectionForm'
 
 export const ConnectionsPage = () => {
-  const { connections, loading } = useConnections()
+  const { connections, loading, error } = useConnections()
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Connection | undefined>()
 
@@ -36,6 +36,7 @@ export const ConnectionsPage = () => {
         </Button>
       </Box>
 
+      {error && <Alert severity="error" className="mb-4">{error}</Alert>}
       <ConnectionList connections={connections} loading={loading} onEdit={handleEdit} />
 
       <ConnectionForm open={formOpen} onClose={handleClose} connection={editing} />

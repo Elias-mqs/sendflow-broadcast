@@ -7,6 +7,7 @@ import { LoginPage } from './features/auth/pages/LoginPage'
 import { PrivateRoute } from './components/PrivateRoute'
 import { Layout } from './components/Layout'
 import { ConnectionsPage } from './features/connections/pages/ConnectionsPage'
+import { ContactsPage } from './features/contacts/pages/ContactsPage'
 
 function App() {
   const setUser = useAuthStore((s) => s.setUser)
@@ -25,7 +26,7 @@ function App() {
           <Route element={<Layout />}>
             {/* páginas serão adicionadas nas fases 5, 6 e 7 */}
             <Route path="/connections" element={<ConnectionsPage />} />
-            <Route path="/contacts" element={<div>Contatos</div>} />
+            <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/messages" element={<div>Mensagens</div>} />
           </Route>
         </Route>

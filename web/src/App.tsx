@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from './firebase'
-import { useAuthStore } from './store/authStore'
-import { LoginPage } from './features/auth/pages/LoginPage'
-import { PrivateRoute } from './components/PrivateRoute'
-import { Layout } from './components/Layout'
-import { ConnectionsPage } from './features/connections/pages/ConnectionsPage'
-import { ContactsPage } from './features/contacts/pages/ContactsPage'
+import { auth } from '@/firebase'
+import { useAuthStore } from '@/store/authStore'
+import { LoginPage } from '@/features/auth/pages/LoginPage'
+import { PrivateRoute } from '@/components/PrivateRoute'
+import { Layout } from '@/components/Layout'
+import { ConnectionsPage } from '@/features/connections/pages/ConnectionsPage'
+import { ContactsPage } from '@/features/contacts/pages/ContactsPage'
 
 function App() {
   const setUser = useAuthStore((s) => s.setUser)

@@ -8,6 +8,7 @@ import { PrivateRoute } from '@/components/PrivateRoute'
 import { Layout } from '@/components/Layout'
 import { ConnectionsPage } from '@/features/connections/pages/ConnectionsPage'
 import { ContactsPage } from '@/features/contacts/pages/ContactsPage'
+import { MessagesPage } from '@/features/messages/pages/MessagesPage'
 
 function App() {
   const setUser = useAuthStore((s) => s.setUser)
@@ -27,7 +28,7 @@ function App() {
             {/* páginas serão adicionadas nas fases 5, 6 e 7 */}
             <Route path="/connections" element={<ConnectionsPage />} />
             <Route path="/contacts" element={<ContactsPage />} />
-            <Route path="/messages" element={<div>Mensagens</div>} />
+            <Route path="/messages" element={<MessagesPage />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/connections" replace />} />

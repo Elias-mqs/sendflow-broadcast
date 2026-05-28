@@ -14,6 +14,7 @@ import {
 import { useAuthStore } from '../store/authStore'
 import { useConnectionStore } from '../store/connectionStore'
 import { signOut } from '../features/auth/services/authService'
+import { useConnections } from '../features/connections/hooks/useConnections'
 
 export const Sidebar = () => {
   const navigate = useNavigate()
@@ -22,8 +23,7 @@ export const Sidebar = () => {
   const { activeConnectionId, setActiveConnection, clearActiveConnection } =
     useConnectionStore()
 
-  // connections será preenchido na fase 5 via useConnections hook
-  const connections: { id: string; name: string }[] = []
+  const { connections } = useConnections()
 
   const handleSignOut = async () => {
     await signOut()

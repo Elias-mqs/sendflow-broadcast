@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import {
@@ -40,7 +40,6 @@ export const MessageForm = ({ open, onClose, connectionId, message }: Props) => 
     register,
     control,
     handleSubmit,
-    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
@@ -48,7 +47,7 @@ export const MessageForm = ({ open, onClose, connectionId, message }: Props) => 
     defaultValues: { text: '', contactIds: [], scheduled: false, scheduledAt: '' },
   })
 
-  const scheduled = watch('scheduled')
+  const scheduled = useWatch({ control, name: 'scheduled' })
 
   useEffect(() => {
     if (message) {

@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { signIn, signUp } from '../services/authService'
-import { loginSchema, type LoginFormData } from '../components/AuthForm/schema'
+import { authSchema, type AuthFormData } from '../components/AuthForm/schema'
 import { BrandPanel } from '../components/BrandPanel'
 import { AuthForm } from '../components/AuthForm'
 
@@ -12,6 +12,7 @@ export const LoginPage = () => {
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [serverError, setServerError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
 
   const {
@@ -19,9 +20,12 @@ export const LoginPage = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) })
+  } = useForm<AuthFormData>({
+    resolver: zodResolver(authSchema),
+    shouldUnregister: true,
+  })
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: AuthFormData) => {
     setServerError(null)
     try {
       if (mode === 'login') {
@@ -38,6 +42,8 @@ export const LoginPage = () => {
   const switchMode = () => {
     setMode((m) => (m === 'login' ? 'register' : 'login'))
     setServerError(null)
+    setShowPassword(false)
+    setShowConfirmPassword(false)
     reset()
   }
 
@@ -80,9 +86,11 @@ export const LoginPage = () => {
             register={register}
             errors={errors}
             isSubmitting={isSubmitting}
+            mode={mode}
             showPassword={showPassword}
             onTogglePassword={() => setShowPassword((v) => !v)}
-            mode={mode}
+            showConfirmPassword={showConfirmPassword}
+            onToggleConfirmPassword={() => setShowConfirmPassword((v) => !v)}
           />
 
           <div className="mt-8 text-center">

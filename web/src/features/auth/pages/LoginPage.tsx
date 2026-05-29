@@ -1,24 +1,17 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import {
-  Box, TextField, Button, Typography, Alert,
-  CircularProgress, Paper,
-} from '@mui/material'
+import { Alert, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { signIn, signUp } from '../services/authService'
-
-const schema = z.object({
-  email: z.email('E-mail inválido'),
-  password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
-})
-
-type FormData = z.infer<typeof schema>
+import { loginSchema, type LoginFormData } from '../components/AuthForm/schema'
+import { BrandPanel } from '../components/BrandPanel'
+import { AuthForm } from '../components/AuthForm'
 
 export const LoginPage = () => {
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [serverError, setServerError] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
   const {
@@ -26,9 +19,9 @@ export const LoginPage = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) })
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setServerError(null)
     try {
       if (mode === 'login') {
@@ -49,52 +42,62 @@ export const LoginPage = () => {
   }
 
   return (
-    <Box className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Paper className="w-full max-w-sm p-8">
-        <Typography variant="h5" className="font-bold mb-6 text-center">
-          {mode === 'login' ? 'Entrar' : 'Criar conta'}
-        </Typography>
+    <div className="flex min-h-screen">
+      <BrandPanel />
 
-        {serverError && (
-          <Alert severity="error" className="mb-4">
-            {serverError}
-          </Alert>
-        )}
-
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          <TextField
-            label="E-mail"
-            type="email"
-            {...register('email')}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            fullWidth
-          />
-          <TextField
-            label="Senha"
-            type="password"
-            {...register('password')}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            fullWidth
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            disabled={isSubmitting}
-            startIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : undefined}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 lg:p-16 bg-white min-h-screen">
+        {/* Mobile logo */}
+        <div className="flex lg:hidden items-center gap-3 mb-12">
+          <div
+            className="w-8 h-8 rounded-xl flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #3B82F6, #6366F1)' }}
           >
-            {mode === 'login' ? 'Entrar' : 'Criar conta'}
-          </Button>
-        </Box>
+            <span className="text-white font-extrabold text-base leading-none">S</span>
+          </div>
+          <span className="font-bold text-lg tracking-[-0.02em]">SendFlow</span>
+        </div>
 
-        <Button fullWidth className="mt-3" onClick={switchMode}>
-          {mode === 'login'
-            ? 'Não tem conta? Cadastre-se'
-            : 'Já tem conta? Entrar'}
-        </Button>
-      </Paper>
-    </Box>
+        <div className="w-full max-w-100">
+          <div className="mb-10 flex flex-col items-center sm:items-start">
+            <Typography variant="h5" className="mb-2">
+              {mode === 'login' ? 'Bem-vindo de volta' : 'Criar sua conta'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {mode === 'login'
+                ? 'Entre com suas credenciais para continuar'
+                : 'Preencha os dados abaixo para começar'}
+            </Typography>
+          </div>
+
+          {serverError && (
+            <Alert severity="error" className="mb-6">
+              {serverError}
+            </Alert>
+          )}
+
+          <AuthForm
+            onSubmit={handleSubmit(onSubmit)}
+            register={register}
+            errors={errors}
+            isSubmitting={isSubmitting}
+            showPassword={showPassword}
+            onTogglePassword={() => setShowPassword((v) => !v)}
+            mode={mode}
+          />
+
+          <div className="mt-8 text-center">
+            <Typography variant="body2" color="text.secondary">
+              {mode === 'login' ? 'Não tem uma conta? ' : 'Já tem uma conta? '}
+              <span
+                onClick={switchMode}
+                className="text-[#2563EB] font-semibold cursor-pointer hover:underline"
+              >
+                {mode === 'login' ? 'Cadastre-se grátis' : 'Fazer login'}
+              </span>
+            </Typography>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

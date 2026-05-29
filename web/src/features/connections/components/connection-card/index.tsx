@@ -10,7 +10,8 @@ interface ConnectionCardProps {
   onDelete: (connection: Connection) => void
 }
 
-function formatDate(timestamp: Timestamp): string {
+function formatDate(timestamp: Timestamp | null): string {
+  if (!timestamp) return '—'
   return timestamp.toDate().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'short',

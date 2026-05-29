@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import { Outlet } from 'react-router-dom'
-import { Sidebar } from './Sidebar'
+import { Sidebar } from './sidebar'
 
 export const Layout = () => (
   <Box className="flex h-screen bg-gray-50 overflow-hidden">

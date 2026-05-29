@@ -1,20 +1,14 @@
 import { useState } from 'react'
 import { Button, Divider, Typography, Alert } from '@mui/material'
-import { AddRounded, ArrowUpwardRounded, ArrowDownwardRounded } from '@mui/icons-material'
+import { AddRounded } from '@mui/icons-material'
 import type { Connection } from '../types'
+import type { SortField, SortDirection } from '../components/connections-toolbar'
 import { useConnections } from '../hooks/useConnections'
 import { ConnectionList } from '../components/connection-list'
+import { ConnectionsToolbar } from '../components/connections-toolbar'
 import { CreateConnectionModal } from '../components/create-connection-modal'
 import { EditConnectionModal } from '../components/edit-connection-modal'
 import { DeleteConnectionDialog } from '../components/delete-connection-dialog'
-
-type SortField = 'name' | 'createdAt'
-type SortDirection = 'asc' | 'desc'
-
-const SORT_LABELS: Record<SortField, string> = {
-  name: 'Nome',
-  createdAt: 'Data',
-}
 
 function sortConnections(connections: Connection[], field: SortField, direction: SortDirection): Connection[] {
   return [...connections].sort((a, b) => {
@@ -76,27 +70,11 @@ export function ConnectionsPage() {
       )}
 
       {!loading && connections.length > 0 && (
-        <div className="flex items-center gap-1 px-6 pt-4">
-          <span className="text-xs text-slate-400 mr-1">Ordenar por</span>
-          {(['name', 'createdAt'] as SortField[]).map((field) => {
-            const isActive = sortField === field
-            const ArrowIcon = sortDirection === 'asc' ? ArrowUpwardRounded : ArrowDownwardRounded
-            return (
-              <button
-                key={field}
-                onClick={() => handleSort(field)}
-                className={`flex items-center gap-0.5 text-xs font-medium px-2 py-1 rounded-md transition-colors ${
-                  isActive
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                {SORT_LABELS[field]}
-                {isActive && <ArrowIcon sx={{ fontSize: 12 }} />}
-              </button>
-            )
-          })}
-        </div>
+        <ConnectionsToolbar
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onSort={handleSort}
+        />
       )}
 
       <div className="flex-1 overflow-auto p-6">

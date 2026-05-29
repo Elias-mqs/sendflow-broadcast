@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   Button, Typography, CircularProgress, Alert, IconButton, Divider,
@@ -18,9 +18,11 @@ export function DeleteConnectionDialog({ connection, onClose }: DeleteConnection
   const [error, setError] = useState<string | null>(null)
   const { activeConnectionId, clearActiveConnection } = useConnectionStore()
 
-  useEffect(() => {
-    if (!connection) setError(null)
-  }, [connection])
+  const handleClose = () => {
+    if (loading) return
+    setError(null)
+    onClose()
+  }
 
   const handleDelete = async () => {
     if (!connection) return
@@ -41,7 +43,7 @@ export function DeleteConnectionDialog({ connection, onClose }: DeleteConnection
   return (
     <Dialog
       open={!!connection}
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth="xs"
       fullWidth
       slotProps={{
@@ -54,7 +56,7 @@ export function DeleteConnectionDialog({ connection, onClose }: DeleteConnection
         sx={{ fontWeight: 700 }}
       >
         Excluir conexão
-        <IconButton size="small" onClick={onClose} disabled={loading}>
+        <IconButton size="small" onClick={handleClose} disabled={loading}>
           <CloseRounded fontSize="small" />
         </IconButton>
       </DialogTitle>
@@ -68,7 +70,7 @@ export function DeleteConnectionDialog({ connection, onClose }: DeleteConnection
       </DialogContent>
       <Divider />
       <DialogActions className="px-6 py-3">
-        <Button onClick={onClose} disabled={loading}>
+        <Button onClick={handleClose} disabled={loading}>
           Cancelar
         </Button>
         <Button

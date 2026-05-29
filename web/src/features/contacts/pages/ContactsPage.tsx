@@ -1,27 +1,53 @@
-import { useState } from 'react'
-import { Box, Typography, Button, Alert } from '@mui/material'
-import { Add as AddIcon } from '@mui/icons-material'
+import { useState, useMemo } from 'react'
+import { Alert } from '@mui/material'
 import type { Contact } from '@/types'
 import { useConnectionStore } from '@/store/connectionStore'
 import { useContacts } from '../hooks/useContacts'
-import { ContactList } from '../components/ContactList'
-import { ContactForm } from '../components/ContactForm'
+import { ContactsToolbar } from '../components/contacts-toolbar'
+import type { SortField, SortDirection } from '../components/contacts-toolbar'
+import { ContactTable } from '../components/contact-table'
+import { ContactTableSkeleton } from '../components/contact-table/ContactTableSkeleton'
+import { ContactEmptyState } from '../components/contact-empty-state'
+import { CreateContactModal } from '../components/create-contact-modal'
+import { EditContactModal } from '../components/edit-contact-modal'
+import { DeleteContactDialog } from '../components/delete-contact-dialog'
 
 export const ContactsPage = () => {
   const { activeConnectionId } = useConnectionStore()
   const { contacts, loading, error } = useContacts(activeConnectionId)
-  const [formOpen, setFormOpen] = useState(false)
-  const [editing, setEditing] = useState<Contact | undefined>()
 
-  const handleEdit = (contact: Contact) => {
-    setEditing(contact)
-    setFormOpen(true)
+  const [createOpen, setCreateOpen] = useState(false)
+  const [editingContact, setEditingContact] = useState<Contact | null>(null)
+  const [deletingContact, setDeletingContact] = useState<Contact | null>(null)
+  const [search, setSearch] = useState('')
+  const [sortField, setSortField] = useState<SortField>('createdAt')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+
+  const handleSort = (field: SortField) => {
+    if (field === sortField) {
+      setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
   }
 
-  const handleClose = () => {
-    setFormOpen(false)
-    setEditing(undefined)
-  }
+  const filteredContacts = useMemo(() => {
+    const term = search.toLowerCase()
+    return contacts
+      .filter(
+        (c) =>
+          c.name.toLowerCase().includes(term) ||
+          c.phone.toLowerCase().includes(term)
+      )
+      .sort((a, b) => {
+        const comparison =
+          sortField === 'name'
+            ? a.name.localeCompare(b.name, 'pt-BR')
+            : (a.createdAt?.toMillis() ?? 0) - (b.createdAt?.toMillis() ?? 0)
+        return sortDirection === 'asc' ? comparison : -comparison
+      })
+  }, [contacts, search, sortField, sortDirection])
 
   if (!activeConnectionId) {
     return (
@@ -32,31 +58,45 @@ export const ContactsPage = () => {
   }
 
   return (
-    <Box>
-      <Box className="flex items-center justify-between mb-6">
-        <Typography variant="h5" className="font-bold">
-          Contatos
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setFormOpen(true)}
-        >
-          Novo contato
-        </Button>
-      </Box>
+    <div>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Contatos</h1>
 
       {error && <Alert severity="error" className="mb-4">{error}</Alert>}
-      <ContactList contacts={contacts} loading={loading} onEdit={handleEdit} />
 
-      {activeConnectionId && (
-        <ContactForm
-          open={formOpen}
-          onClose={handleClose}
-          connectionId={activeConnectionId}
-          contact={editing}
+      <ContactsToolbar
+        search={search}
+        onSearchChange={setSearch}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSort={handleSort}
+        onCreateClick={() => setCreateOpen(true)}
+      />
+
+      {loading ? (
+        <ContactTableSkeleton />
+      ) : filteredContacts.length === 0 && !search ? (
+        <ContactEmptyState onCreateClick={() => setCreateOpen(true)} />
+      ) : (
+        <ContactTable
+          contacts={filteredContacts}
+          onEdit={setEditingContact}
+          onDelete={setDeletingContact}
         />
       )}
-    </Box>
+
+      <CreateContactModal
+        open={createOpen}
+        connectionId={activeConnectionId}
+        onClose={() => setCreateOpen(false)}
+      />
+      <EditContactModal
+        contact={editingContact}
+        onClose={() => setEditingContact(null)}
+      />
+      <DeleteContactDialog
+        contact={deletingContact}
+        onClose={() => setDeletingContact(null)}
+      />
+    </div>
   )
 }

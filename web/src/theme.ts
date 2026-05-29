@@ -48,20 +48,20 @@ export const theme = createTheme({
           boxShadow: 'none',
           transition: 'all 0.15s ease',
           '&:hover': { boxShadow: 'none' },
-        },
-        containedPrimary: {
-          background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-          boxShadow: '0 1px 2px rgba(37, 99, 235, 0.2), 0 2px 8px rgba(37, 99, 235, 0.15)',
-          '&:hover': {
-            background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)',
-            transform: 'translateY(-1px)',
-          },
-          '&:active': { transform: 'translateY(0)' },
-          '&.Mui-disabled': {
-            background: '#CBD5E1',
-            color: '#94A3B8',
-            boxShadow: 'none',
+          '&.MuiButton-containedPrimary': {
+            background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+            boxShadow: '0 1px 2px rgba(37, 99, 235, 0.2), 0 2px 8px rgba(37, 99, 235, 0.15)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)',
+              transform: 'translateY(-1px)',
+            },
+            '&:active': { transform: 'translateY(0)' },
+            '&.Mui-disabled': {
+              background: '#CBD5E1',
+              color: '#94A3B8',
+              boxShadow: 'none',
+            },
           },
         },
         text: {
@@ -126,12 +126,15 @@ export const theme = createTheme({
     },
     MuiAlert: {
       styleOverrides: {
-        root: { borderRadius: 10, fontSize: 14 },
-        standardError: {
-          backgroundColor: '#FEF2F2',
-          color: '#B91C1C',
-          border: '1px solid #FECACA',
-          '& .MuiAlert-icon': { color: '#EF4444' },
+        root: {
+          borderRadius: 10,
+          fontSize: 14,
+          '&.MuiAlert-standardError': {
+            backgroundColor: '#FEF2F2',
+            color: '#B91C1C',
+            border: '1px solid #FECACA',
+            '& .MuiAlert-icon': { color: '#EF4444' },
+          },
         },
       },
     },

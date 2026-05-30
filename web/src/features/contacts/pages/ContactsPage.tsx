@@ -11,6 +11,7 @@ import { ContactEmptyState } from '../components/contact-empty-state'
 import { CreateContactModal } from '../components/create-contact-modal'
 import { EditContactModal } from '../components/edit-contact-modal'
 import { DeleteContactDialog } from '../components/delete-contact-dialog'
+import { PageHeader } from '@/components/page-header'
 
 export const ContactsPage = () => {
   const { activeConnectionId } = useConnectionStore()
@@ -59,7 +60,7 @@ export const ContactsPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Contatos</h1>
+      <PageHeader title="Contatos" subtitle="Gerencie seus contatos de envio" />
 
       {error && <Alert severity="error" className="mb-4">{error}</Alert>}
 

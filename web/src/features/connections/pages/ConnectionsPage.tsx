@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Button, Divider, Typography, Alert } from '@mui/material'
-import { AddRounded } from '@mui/icons-material'
+import { Alert } from '@mui/material'
 import type { Connection } from '../types'
 import type { SortField, SortDirection } from '../components/connections-toolbar'
 import { useConnections } from '../hooks/useConnections'
@@ -9,6 +8,7 @@ import { ConnectionsToolbar } from '../components/connections-toolbar'
 import { CreateConnectionModal } from '../components/create-connection-modal'
 import { EditConnectionModal } from '../components/edit-connection-modal'
 import { DeleteConnectionDialog } from '../components/delete-connection-dialog'
+import { PageHeader } from '@/components/page-header'
 
 function sortConnections(connections: Connection[], field: SortField, direction: SortDirection): Connection[] {
   return [...connections].sort((a, b) => {
@@ -42,50 +42,25 @@ export function ConnectionsPage() {
   const sortedConnections = sortConnections(connections, sortField, sortDirection)
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-6 py-5">
-        <div>
-          <Typography variant="h5" sx={{ fontWeight: 700, letterSpacing: '-0.02em' }}>
-            Conexões
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Gerencie suas conexões de envio
-          </Typography>
-        </div>
-        <Button
-          variant="contained"
-          startIcon={<AddRounded />}
-          onClick={() => setCreateOpen(true)}
-          sx={{ width: { xs: '100%', sm: 'auto' } }}
-        >
-          Nova Conexão
-        </Button>
-      </div>
-      <Divider />
+    <div>
+      <PageHeader title="Conexões" subtitle="Gerencie suas conexões de envio" />
 
-      {error && (
-        <Alert severity="error" className="mx-6 mt-4">
-          {error}
-        </Alert>
-      )}
+      {error && <Alert severity="error" className="mb-4">{error}</Alert>}
 
-      {!loading && connections.length > 0 && (
-        <ConnectionsToolbar
-          sortField={sortField}
-          sortDirection={sortDirection}
-          onSort={handleSort}
-        />
-      )}
+      <ConnectionsToolbar
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSort={handleSort}
+        onCreateClick={() => setCreateOpen(true)}
+      />
 
-      <div className="flex-1 overflow-auto p-6">
-        <ConnectionList
-          connections={sortedConnections}
-          loading={loading}
-          onEdit={(connection) => setEditingConnection(connection)}
-          onDelete={(connection) => setDeletingConnection(connection)}
-          onCreateClick={() => setCreateOpen(true)}
-        />
-      </div>
+      <ConnectionList
+        connections={sortedConnections}
+        loading={loading}
+        onEdit={(connection) => setEditingConnection(connection)}
+        onDelete={(connection) => setDeletingConnection(connection)}
+        onCreateClick={() => setCreateOpen(true)}
+      />
 
       <CreateConnectionModal
         open={createOpen}

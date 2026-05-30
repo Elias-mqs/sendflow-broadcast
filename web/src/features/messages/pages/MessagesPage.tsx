@@ -12,6 +12,7 @@ import { MessageEmptyState } from '../components/message-empty-state'
 import { CreateMessageModal } from '../components/create-message-modal'
 import { EditMessageModal } from '../components/edit-message-modal'
 import { DeleteMessageDialog } from '../components/delete-message-dialog'
+import { PageHeader } from '@/components/page-header'
 
 export const MessagesPage = () => {
   const { activeConnectionId } = useConnectionStore()
@@ -41,7 +42,7 @@ export const MessagesPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Mensagens</h1>
+      <PageHeader title="Mensagens" subtitle="Gerencie suas mensagens de broadcast" />
 
       {error && <Alert severity="error" className="mb-4">{error}</Alert>}
 

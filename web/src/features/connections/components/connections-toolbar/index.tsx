@@ -20,7 +20,7 @@ export function ConnectionsToolbar({ sortField, sortDirection, onSort }: Connect
   return (
     <div className="flex items-center justify-between gap-4 px-6 pt-4">
       <div className="flex items-center gap-1">
-        <span className="text-xs text-slate-400 mr-1">Ordenar por</span>
+        <span className="text-xs text-slate-400 mr-1">Ordenar por:</span>
         {SORT_OPTIONS.map(({ field, label }) => {
           const isActive = sortField === field
           return (

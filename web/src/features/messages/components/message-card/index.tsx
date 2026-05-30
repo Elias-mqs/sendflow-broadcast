@@ -55,13 +55,21 @@ export function MessageCard({ message, contacts, onEdit, onDelete }: MessageCard
         </Tooltip>
 
         <div className="flex items-center gap-1">
-          <IconButton
-            size="small"
-            onClick={() => onEdit(message)}
-            className="text-slate-400! hover:text-slate-700!"
+          <Tooltip
+            title={message.status === 'sent' ? 'Não é possível editar uma mensagem enviada' : ''}
+            placement="top"
           >
-            <EditRounded style={{ fontSize: 16 }} />
-          </IconButton>
+            <span>
+              <IconButton
+                size="small"
+                onClick={() => onEdit(message)}
+                disabled={message.status === 'sent'}
+                className="text-slate-400! hover:text-slate-700!"
+              >
+                <EditRounded style={{ fontSize: 16 }} />
+              </IconButton>
+            </span>
+          </Tooltip>
           <IconButton
             size="small"
             onClick={() => onDelete(message)}

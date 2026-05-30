@@ -21,55 +21,51 @@ function formatDate(timestamp: Timestamp | null): string {
   })
 }
 
-const TABLE_HEADERS = ['Nome', 'Telefone', 'Criado em', 'Ações']
+const HEADER_CELL_CLASS = 'text-xs! font-bold! uppercase! tracking-wide! text-slate-400! py-2! border-b! border-slate-200!'
 
 export function ContactTable({ contacts, onEdit, onDelete }: ContactTableProps) {
   return (
     <Paper
-      className="border border-slate-200 shadow-none overflow-hidden"
+      className="border! border-slate-200! shadow-none! overflow-hidden!"
       style={{ borderRadius: '12px' }}
     >
       <Table>
-        <TableHead className="bg-slate-50">
+        <TableHead className="bg-slate-50!">
           <TableRow>
-            {TABLE_HEADERS.map((header) => (
-              <TableCell
-                key={header}
-                className="text-xs font-semibold uppercase tracking-wide text-slate-400 py-3 border-b border-slate-200"
-              >
-                {header}
-              </TableCell>
-            ))}
+            <TableCell className={HEADER_CELL_CLASS}>Nome</TableCell>
+            <TableCell className={HEADER_CELL_CLASS}>Telefone</TableCell>
+            <TableCell className={HEADER_CELL_CLASS}>Criado em</TableCell>
+            <TableCell className={HEADER_CELL_CLASS} align="right">Ações</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {contacts.map((contact) => (
             <TableRow
               key={contact.id}
-              className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
+              className="border-b! border-slate-100! hover:bg-slate-50! transition-colors!"
             >
-              <TableCell className="font-medium text-slate-900 text-sm py-3">
+              <TableCell className="font-medium! text-slate-900! text-sm! py-2!">
                 {contact.name}
               </TableCell>
-              <TableCell className="text-slate-500 text-sm py-3">
+              <TableCell className="text-slate-500! text-sm py-2!">
                 {contact.phone}
               </TableCell>
-              <TableCell className="text-slate-400 text-sm py-3">
+              <TableCell className="text-slate-400! text-sm! py-2!">
                 {formatDate(contact.createdAt)}
               </TableCell>
-              <TableCell className="py-3">
-                <div className="flex items-center gap-1">
+              <TableCell className="py-2!" align="right">
+                <div className="flex items-center justify-end gap-1">
                   <IconButton
                     size="small"
                     onClick={() => onEdit(contact)}
-                    className="text-slate-400 hover:text-slate-700"
+                    className="text-slate-400! hover:text-slate-700!"
                   >
                     <EditRounded style={{ fontSize: 16 }} />
                   </IconButton>
                   <IconButton
                     size="small"
                     onClick={() => onDelete(contact)}
-                    className="text-slate-400 hover:text-red-500"
+                    className="text-red-500! hover:text-red-600!"
                   >
                     <DeleteRounded style={{ fontSize: 16 }} />
                   </IconButton>

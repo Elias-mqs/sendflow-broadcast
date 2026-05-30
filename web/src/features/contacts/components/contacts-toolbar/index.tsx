@@ -35,20 +35,23 @@ export function ContactsToolbar({
         placeholder="Buscar por nome ou telefone…"
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
-        className="w-72"
+        className="w-72!"
         slotProps={{
           input: {
             startAdornment: (
               <InputAdornment position="start">
-                <SearchRounded className="text-slate-400" style={{ fontSize: 18 }} />
+                <SearchRounded className="text-slate-400!" style={{ fontSize: 18 }} />
               </InputAdornment>
             ),
+          },
+          htmlInput: {
+            style: { paddingTop: '8px', paddingBottom: '8px' },
           },
         }}
       />
 
       <div className="flex items-center gap-1 flex-1">
-        <span className="text-xs text-slate-400 mr-1">Ordenar por</span>
+        <span className="text-xs text-slate-400 mr-1">Ordenar por:</span>
         {SORT_OPTIONS.map(({ field, label }) => {
           const isActive = sortField === field
           return (

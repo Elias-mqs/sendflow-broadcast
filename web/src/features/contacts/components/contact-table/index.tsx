@@ -3,22 +3,13 @@ import {
   IconButton, Paper,
 } from '@mui/material'
 import { EditRounded, DeleteRounded } from '@mui/icons-material'
-import type { Timestamp } from 'firebase/firestore'
 import type { Contact } from '@/types'
+import { formatPhone, formatDate } from './helpers'
 
 interface ContactTableProps {
   contacts: Contact[]
   onEdit: (contact: Contact) => void
   onDelete: (contact: Contact) => void
-}
-
-function formatDate(timestamp: Timestamp | null): string {
-  if (!timestamp) return '—'
-  return timestamp.toDate().toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
 }
 
 const HEADER_CELL_CLASS = 'text-xs! font-bold! uppercase! tracking-wide! text-slate-400! py-2! border-b! border-slate-200!'
@@ -48,7 +39,7 @@ export function ContactTable({ contacts, onEdit, onDelete }: ContactTableProps) 
                 {contact.name}
               </TableCell>
               <TableCell className="text-slate-500! text-sm py-2!">
-                {contact.phone}
+                {formatPhone(contact.phone)}
               </TableCell>
               <TableCell className="text-slate-400! text-sm! py-2!">
                 {formatDate(contact.createdAt)}

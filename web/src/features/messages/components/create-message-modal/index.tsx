@@ -46,6 +46,7 @@ export function CreateMessageModal({ open, connectionId, onClose }: CreateMessag
       handleClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao criar mensagem.')
+    } finally {
       setLoading(false)
     }
   }

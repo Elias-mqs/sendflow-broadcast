@@ -42,6 +42,7 @@ export function EditMessageModal({ message, onClose }: EditMessageModalProps) {
       handleClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao editar mensagem.')
+    } finally {
       setLoading(false)
     }
   }

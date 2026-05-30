@@ -5,21 +5,21 @@ import {
 import type { SelectChangeEvent } from '@mui/material'
 import type { Contact } from '@/types'
 
-interface Props {
+interface ContactSelectorProps {
   contacts: Contact[]
   selectedIds: string[]
   onChange: (ids: string[]) => void
   error?: boolean
-  helperText?: string
+  disabled?: boolean
 }
 
-export const ContactSelector = ({ contacts, selectedIds, onChange, error }: Props) => {
+export function ContactSelector({ contacts, selectedIds, onChange, error, disabled }: ContactSelectorProps) {
   const handleChange = (e: SelectChangeEvent<string[]>) => {
     onChange(e.target.value as string[])
   }
 
   return (
-    <FormControl fullWidth error={error}>
+    <FormControl fullWidth error={error} disabled={disabled}>
       <InputLabel>Contatos *</InputLabel>
       <Select
         multiple

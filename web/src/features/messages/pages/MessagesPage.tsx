@@ -1,34 +1,35 @@
-import { useState } from 'react'
-import {
-  Box, Typography, Button, Alert, Tabs, Tab,
-} from '@mui/material'
-import { Add as AddIcon } from '@mui/icons-material'
-import type { Message, MessageStatus } from '@/types'
+import { useState, useMemo } from 'react'
+import { Alert } from '@mui/material'
+import type { Message } from '@/types'
 import { useConnectionStore } from '@/store/connectionStore'
 import { useMessages } from '../hooks/useMessages'
-import { MessageList } from '../components/MessageList'
-import { MessageForm } from '../components/MessageForm'
-
-type FilterTab = 'all' | MessageStatus
+import { useContacts } from '@/features/contacts/hooks/useContacts'
+import { MessagesToolbar } from '../components/messages-toolbar'
+import type { StatusFilter } from '../components/messages-toolbar'
+import { MessageList } from '../components/message-list'
+import { MessageListSkeleton } from '../components/message-list/MessageListSkeleton'
+import { MessageEmptyState } from '../components/message-empty-state'
+import { CreateMessageModal } from '../components/create-message-modal'
+import { EditMessageModal } from '../components/edit-message-modal'
+import { DeleteMessageDialog } from '../components/delete-message-dialog'
 
 export const MessagesPage = () => {
   const { activeConnectionId } = useConnectionStore()
-  const [filter, setFilter] = useState<FilterTab>('all')
-  const [formOpen, setFormOpen] = useState(false)
-  const [editing, setEditing] = useState<Message | undefined>()
+  const { messages, loading, error } = useMessages(activeConnectionId)
+  const { contacts } = useContacts(activeConnectionId)
 
-  const statusFilter = filter === 'all' ? undefined : filter
-  const { messages, loading, error } = useMessages(activeConnectionId, statusFilter)
+  const [createOpen, setCreateOpen] = useState(false)
+  const [editingMessage, setEditingMessage] = useState<Message | null>(null)
+  const [deletingMessage, setDeletingMessage] = useState<Message | null>(null)
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
 
-  const handleEdit = (message: Message) => {
-    setEditing(message)
-    setFormOpen(true)
-  }
-
-  const handleClose = () => {
-    setFormOpen(false)
-    setEditing(undefined)
-  }
+  const filteredMessages = useMemo(() => {
+    const term = search.toLowerCase()
+    return messages
+      .filter((m) => m.text.toLowerCase().includes(term))
+      .filter((m) => statusFilter === 'all' || m.status === statusFilter)
+  }, [messages, search, statusFilter])
 
   if (!activeConnectionId) {
     return (
@@ -39,41 +40,45 @@ export const MessagesPage = () => {
   }
 
   return (
-    <Box>
-      <Box className="flex items-center justify-between mb-4">
-        <Typography variant="h5" className="font-bold">
-          Mensagens
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setFormOpen(true)}
-        >
-          Nova mensagem
-        </Button>
-      </Box>
-
-      <Tabs
-        value={filter}
-        onChange={(_, v) => setFilter(v)}
-        className="mb-4"
-      >
-        <Tab label="Todas" value="all" />
-        <Tab label="Enviadas" value="sent" />
-        <Tab label="Agendadas" value="scheduled" />
-      </Tabs>
+    <div>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Mensagens</h1>
 
       {error && <Alert severity="error" className="mb-4">{error}</Alert>}
-      <MessageList messages={messages} loading={loading} onEdit={handleEdit} />
 
-      {activeConnectionId && (
-        <MessageForm
-          open={formOpen}
-          onClose={handleClose}
-          connectionId={activeConnectionId}
-          message={editing}
+      <MessagesToolbar
+        search={search}
+        onSearchChange={setSearch}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+        onCreateClick={() => setCreateOpen(true)}
+      />
+
+      {loading ? (
+        <MessageListSkeleton />
+      ) : filteredMessages.length === 0 && !search && statusFilter === 'all' ? (
+        <MessageEmptyState onCreateClick={() => setCreateOpen(true)} />
+      ) : (
+        <MessageList
+          messages={filteredMessages}
+          contacts={contacts}
+          onEdit={setEditingMessage}
+          onDelete={setDeletingMessage}
         />
       )}
-    </Box>
+
+      <CreateMessageModal
+        open={createOpen}
+        connectionId={activeConnectionId}
+        onClose={() => setCreateOpen(false)}
+      />
+      <EditMessageModal
+        message={editingMessage}
+        onClose={() => setEditingMessage(null)}
+      />
+      <DeleteMessageDialog
+        message={deletingMessage}
+        onClose={() => setDeletingMessage(null)}
+      />
+    </div>
   )
 }

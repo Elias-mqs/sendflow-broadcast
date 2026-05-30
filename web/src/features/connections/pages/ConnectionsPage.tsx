@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Alert } from '@mui/material'
 import type { Connection } from '../types'
 import type { SortField, SortDirection } from '../components/connections-toolbar'
@@ -29,6 +29,7 @@ export function ConnectionsPage() {
   const [deletingConnection, setDeletingConnection] = useState<Connection | null>(null)
   const [sortField, setSortField] = useState<SortField>('createdAt')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  const [search, setSearch] = useState('')
 
   const handleSort = (field: SortField) => {
     if (field === sortField) {
@@ -39,7 +40,11 @@ export function ConnectionsPage() {
     }
   }
 
-  const sortedConnections = sortConnections(connections, sortField, sortDirection)
+  const filteredConnections = useMemo(() => {
+    const term = search.toLowerCase()
+    const filtered = connections.filter((c) => c.name.toLowerCase().includes(term))
+    return sortConnections(filtered, sortField, sortDirection)
+  }, [connections, search, sortField, sortDirection])
 
   return (
     <div>
@@ -48,6 +53,8 @@ export function ConnectionsPage() {
       {error && <Alert severity="error" className="mb-4">{error}</Alert>}
 
       <ConnectionsToolbar
+        search={search}
+        onSearchChange={setSearch}
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}
@@ -55,7 +62,7 @@ export function ConnectionsPage() {
       />
 
       <ConnectionList
-        connections={sortedConnections}
+        connections={filteredConnections}
         loading={loading}
         onEdit={(connection) => setEditingConnection(connection)}
         onDelete={(connection) => setDeletingConnection(connection)}

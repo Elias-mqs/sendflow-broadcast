@@ -1,10 +1,12 @@
-import { Button } from '@mui/material'
-import { ArrowUpwardRounded, ArrowDownwardRounded, AddRounded } from '@mui/icons-material'
+import { InputAdornment, TextField, Button } from '@mui/material'
+import { SearchRounded, ArrowUpwardRounded, ArrowDownwardRounded, AddRounded } from '@mui/icons-material'
 
 export type SortField = 'name' | 'createdAt'
 export type SortDirection = 'asc' | 'desc'
 
 interface ConnectionsToolbarProps {
+  search: string
+  onSearchChange: (value: string) => void
   sortField: SortField
   sortDirection: SortDirection
   onSort: (field: SortField) => void
@@ -16,11 +18,30 @@ const SORT_OPTIONS: { field: SortField; label: string }[] = [
   { field: 'createdAt', label: 'Data' },
 ]
 
-export function ConnectionsToolbar({ sortField, sortDirection, onSort, onCreateClick }: ConnectionsToolbarProps) {
+export function ConnectionsToolbar({ search, onSearchChange, sortField, sortDirection, onSort, onCreateClick }: ConnectionsToolbarProps) {
   const ArrowIcon = sortDirection === 'asc' ? ArrowUpwardRounded : ArrowDownwardRounded
 
   return (
     <div className="flex items-center gap-4 mb-4">
+      <TextField
+        size="small"
+        placeholder="Buscar por nome…"
+        value={search}
+        onChange={(e) => onSearchChange(e.target.value)}
+        className="w-72!"
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchRounded className="text-slate-400!" style={{ fontSize: 18 }} />
+              </InputAdornment>
+            ),
+          },
+          htmlInput: {
+            style: { paddingTop: '8px', paddingBottom: '8px' },
+          },
+        }}
+      />
       <div className="flex items-center gap-1 flex-1">
         <span className="text-xs text-slate-400 mr-1">Ordenar por:</span>
         {SORT_OPTIONS.map(({ field, label }) => {
